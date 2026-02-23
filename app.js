@@ -437,19 +437,27 @@ function getAllEntries() {
     const entries = [];
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key.startsWith('journal_')) {
+        // Only get date-based entries (journal_YYYY-MM-DD format)
+        if (key.startsWith('journal_') && key.match(/^journal_\d{4}-\d{2}-\d{2}$/)) {
             const dateStr = key.replace('journal_', '');
             try {
-                const data = JSON.parse(localStorage.getItem(key));
-                const preview = data.letter?.body?.substring(0, 80) || 
-                               data.notes?.content?.substring(0, 80) || 
+                const rawData = localStorage.getItem(key);
+                // Skip if data is not valid JSON
+                if (!rawData || rawData === 'undefined' || rawData === 'null') {
+                    continue;
+                }
+                const data = JSON.parse(rawData);
+                const preview = data?.letter?.body?.substring(0, 80) || 
+                               data?.notes?.content?.substring(0, 80) || 
                                '';
                 entries.push({
                     date: dateStr,
                     preview: preview
                 });
             } catch (e) {
-                console.error('Error parsing entry:', e);
+                // Remove corrupted entry
+                console.warn('Removing corrupted entry:', key);
+                localStorage.removeItem(key);
             }
         }
     }
@@ -1430,11 +1438,17 @@ function getAllJournalData() {
     const allData = {};
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key.startsWith('journal_') || key.startsWith('flipJournal')) {
+        // Only backup valid journal entries
+        if ((key.startsWith('journal_') && key.match(/^journal_(\d{4}-\d{2}-\d{2}|lastDate|lastPage)$/)) || 
+            key.startsWith('flipJournal')) {
             try {
-                allData[key] = JSON.parse(localStorage.getItem(key));
+                const rawData = localStorage.getItem(key);
+                if (rawData && rawData !== 'undefined' && rawData !== 'null') {
+                    allData[key] = JSON.parse(rawData);
+                }
             } catch (e) {
-                allData[key] = localStorage.getItem(key);
+                // Skip corrupted entries
+                console.warn('Skipping corrupted entry:', key);
             }
         }
     }
