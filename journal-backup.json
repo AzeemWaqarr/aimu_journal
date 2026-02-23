@@ -1,0 +1,141 @@
+{
+  "flipJournalData": {
+    "cover": {
+      "title": "Aima's Ramblings",
+      "subtitle": "⚘ Proceed with Caution ⚘",
+      "owner": ""
+    },
+    "dedication": "To myself — for all the days I kept going,\neven when I didn't feel like it.\n\nTo the quiet mornings and late nights,\nto the dreams I'm still chasing,\nto the person I'm becoming.\n\nThis journal is a safe space.\nNo judgments. No expectations.\nJust me, being authentically me.\n\n♡",
+    "dedicationDate": "Started: February 2026",
+    "letter": {
+      "date": "February 23, 2026",
+      "greeting": "Dear Future Me,",
+      "body": "Dear Journal,\n\nToday..."
+    },
+    "continued": "",
+    "stickyNote": "Remember to breathe! 💭",
+    "gratitude": {
+      "title": "✿ Gratitude Garden ✿",
+      "subtitle": "Little things that made my heart happy...",
+      "cards": [
+        "Morning coffee ☕",
+        "A good book 📚",
+        "Sunshine 🌞",
+        "I'm grateful for..."
+      ],
+      "list": [
+        "☐ ________________________________",
+        "☐ ________________________________",
+        "☐ ________________________________",
+        "☐ ________________________________",
+        "☐ ________________________________"
+      ],
+      "quote": "Gratitude turns what we have into enough."
+    },
+    "dreams": {
+      "title": "☆ Dreams & Wishes ☆",
+      "dreams": [],
+      "dreamImages": [],
+      "goalsTitle": "This Month's Intentions:",
+      "visionImages": []
+    },
+    "memories": {
+      "title": "❀ Memory Lane ❀",
+      "polaroids": [],
+      "memoryText": "It was an ordinary Tuesday, but somehow everything felt magical. The way the sunlight filtered through the leaves, the sound of laughter filling the room, the feeling that this moment — right here, right now — was exactly where I was meant to be.\n\nI want to remember how my heart felt: full, grateful, alive.",
+      "memoryDate": "— A day worth remembering ♡",
+      "photos": [
+        {
+          "image": null,
+          "caption": ""
+        },
+        {
+          "image": null,
+          "caption": ""
+        },
+        {
+          "image": null,
+          "caption": ""
+        }
+      ]
+    },
+    "notes": {
+      "title": "✎ Free Thoughts ✎",
+      "content": "Write your thoughts here..."
+    },
+    "backCover": {
+      "quote": "\"Thank you for the rant\""
+    }
+  },
+  "journal_lastPage": 1,
+  "journal_lastDate": "2026-02-23",
+  "flipJournalCurrentPage": 1,
+  "journal_2026-02-23": {
+    "cover": {
+      "title": "Aima's Ramblings",
+      "subtitle": "⚘ Proceed with Caution ⚘",
+      "owner": ""
+    },
+    "dedication": "To myself — for all the days I kept going,\neven when I didn't feel like it.\n\nTo the quiet mornings and late nights,\nto the dreams I'm still chasing,\nto the person I'm becoming.\n\nThis journal is a safe space.\nNo judgments. No expectations.\nJust me, being authentically me.\n\n♡",
+    "dedicationDate": "Started: February 2026",
+    "letter": {
+      "date": "February 23, 2026",
+      "greeting": "Dear Future Me,",
+      "body": "Dear Journal,\n\nToday..."
+    },
+    "continued": "Sometimes I wonder if I'm doing enough. Then I remind myself that \"enough\" is a moving target, and maybe I should stop chasing it.\n\nThings I want to tell myself more often:\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n→ You don't have to have it all figured out\n→ Rest is productive too\n→ Your feelings are valid\n→ It's okay to change your mind\n→ You're allowed to take up space\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nA quote I'm holding onto today:\n\"You are not behind. You are not ahead. You are exactly where you need to be.\"\n\n🌙",
+    "stickyNote": "Remember to breathe! 💭",
+    "gratitude": {
+      "title": "✿ Gratitude Garden ✿",
+      "subtitle": "Little things that made my heart happy...",
+      "cards": [
+        "Morning coffee ☕",
+        "A good book 📚",
+        "Sunshine 🌞",
+        "I'm grateful for..."
+      ],
+      "list": [
+        "☐ ________________________________",
+        "☐ ________________________________",
+        "☐ ________________________________",
+        "☐ ________________________________",
+        "☐ ________________________________"
+      ],
+      "quote": "Gratitude turns what we have into enough."
+    },
+    "dreams": {
+      "title": "☆ Dreams & Wishes ☆",
+      "dreams": [],
+      "dreamImages": [],
+      "goalsTitle": "This Month's Intentions:",
+      "visionImages": []
+    },
+    "memories": {
+      "title": "❀ Memory Lane ❀",
+      "polaroids": [],
+      "memoryText": "It was an ordinary Tuesday, but somehow everything felt magical. The way the sunlight filtered through the leaves, the sound of laughter filling the room, the feeling that this moment — right here, right now — was exactly where I was meant to be.\n\nI want to remember how my heart felt: full, grateful, alive.",
+      "memoryDate": "— A day worth remembering ♡",
+      "photos": [
+        {
+          "image": null,
+          "caption": ""
+        },
+        {
+          "image": null,
+          "caption": ""
+        },
+        {
+          "image": null,
+          "caption": ""
+        }
+      ]
+    },
+    "notes": {
+      "title": "✎ Free Thoughts ✎",
+      "content": "Write your thoughts here..."
+    },
+    "backCover": {
+      "quote": "\"Thank you for the rant\""
+    }
+  }
+}

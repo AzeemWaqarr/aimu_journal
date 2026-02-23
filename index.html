@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#87CEEB">
+    <title>My Personal Journal — Flip Through My Pages</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Patrick+Hand&family=Shadows+Into+Light&family=Dancing+Script:wght@400;500;600;700&family=Indie+Flower&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background -->
+    <div class="desk-background"></div>
+    
+    <!-- Page Counter -->
+    <div class="page-indicator">
+        <span id="currentPageNum">1</span> / <span id="totalPages">6</span>
+    </div>
+
+    <!-- Date Navigation -->
+    <div class="date-nav">
+        <button class="date-nav-btn" onclick="previousDay()" title="Previous Day">◀</button>
+        <div class="date-display">
+            <span class="date-label">📅</span>
+            <input type="date" id="journalDate" onchange="loadDateEntry(this.value)">
+            <span class="today-btn" onclick="goToToday()" title="Go to Today">Today</span>
+        </div>
+        <button class="date-nav-btn" onclick="nextDay()" title="Next Day">▶</button>
+    </div>
+
+    <!-- Entries List Button -->
+    <button class="entries-btn" onclick="toggleEntriesList()" title="View All Entries">📖 Entries</button>
+    
+    <!-- Highlight Toolbar -->
+    <div class="highlight-toolbar" id="highlightToolbar">
+        <span class="toolbar-label">Highlight:</span>
+        <button class="highlight-btn yellow" onclick="highlightSelection('yellow')" title="Yellow">🟡</button>
+        <button class="highlight-btn pink" onclick="highlightSelection('pink')" title="Pink">🩷</button>
+        <button class="highlight-btn green" onclick="highlightSelection('green')" title="Green">🟢</button>
+        <button class="highlight-btn blue" onclick="highlightSelection('blue')" title="Blue">🔵</button>
+        <button class="highlight-btn purple" onclick="highlightSelection('purple')" title="Purple">🟣</button>
+        <button class="highlight-btn remove" onclick="removeHighlight()" title="Remove">✕</button>
+    </div>
+    
+    <!-- Entries Sidebar -->
+    <div class="entries-sidebar" id="entriesSidebar">
+        <div class="sidebar-header">
+            <h3>📔 My Journal Entries</h3>
+            <button onclick="toggleEntriesList()">✕</button>
+        </div>
+        <div class="entries-list" id="entriesList">
+            <!-- Entries will be populated here -->
+        </div>
+        <div class="backup-section">
+            <div class="backup-title">💾 Restore Backup</div>
+            <div class="backup-buttons">
+                <button class="backup-btn cloud-btn" onclick="restoreFromCloud()" title="Restore from JSONBin.io cloud">☁️ Cloud</button>
+                <button class="backup-btn" onclick="document.getElementById('uploadBackup').click()" title="Upload backup file">📤 File</button>
+                <input type="file" id="uploadBackup" accept=".json" onchange="uploadBackupFile(event)" hidden>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Arrows -->
+    <button class="nav-arrow nav-prev" onclick="prevPage()" id="prevBtn">
+        <span>‹</span>
+    </button>
+    <button class="nav-arrow nav-next" onclick="nextPage()" id="nextBtn">
+        <span>›</span>
+    </button>
+
+    <!-- The Flipping Book -->
+    <div class="book-wrapper">
+        <div class="book" id="book">
+            
+            <!-- Page 1: Cover -->
+            <div class="page" id="page1">
+                <div class="page-front cover-front cute-cover">
+                    <div class="cover-texture"></div>
+                    
+                    <!-- Ghibli Fireflies -->
+                    <div class="sparkles">
+                        <span class="sparkle s1">●</span>
+                        <span class="sparkle s2">●</span>
+                        <span class="sparkle s3">●</span>
+                        <span class="sparkle s4">●</span>
+                        <span class="sparkle s5">●</span>
+                        <span class="sparkle s6">●</span>
+                    </div>
+                    
+                    <!-- Ghibli Soot Sprites (Susuwatari) -->
+                    <div class="soot-sprites">
+                        <svg class="soot-sprite soot-1" viewBox="0 0 40 40" width="25" height="25">
+                            <circle cx="20" cy="20" r="15" fill="#1a1a1a"/>
+                            <circle cx="14" cy="16" r="4" fill="#fff"/>
+                            <circle cx="26" cy="16" r="4" fill="#fff"/>
+                            <circle cx="14" cy="16" r="2" fill="#1a1a1a"/>
+                            <circle cx="26" cy="16" r="2" fill="#1a1a1a"/>
+                            <line x1="5" y1="10" x2="12" y2="15" stroke="#1a1a1a" stroke-width="2"/>
+                            <line x1="35" y1="10" x2="28" y2="15" stroke="#1a1a1a" stroke-width="2"/>
+                            <line x1="8" y1="25" x2="13" y2="22" stroke="#1a1a1a" stroke-width="2"/>
+                            <line x1="32" y1="25" x2="27" y2="22" stroke="#1a1a1a" stroke-width="2"/>
+                        </svg>
+                        <svg class="soot-sprite soot-2" viewBox="0 0 40 40" width="20" height="20">
+                            <circle cx="20" cy="20" r="15" fill="#2a2a2a"/>
+                            <circle cx="14" cy="16" r="3" fill="#fff"/>
+                            <circle cx="26" cy="16" r="3" fill="#fff"/>
+                            <circle cx="14" cy="16" r="1.5" fill="#2a2a2a"/>
+                            <circle cx="26" cy="16" r="1.5" fill="#2a2a2a"/>
+                        </svg>
+                        <svg class="soot-sprite soot-3" viewBox="0 0 40 40" width="22" height="22">
+                            <circle cx="20" cy="20" r="15" fill="#1a1a1a"/>
+                            <circle cx="14" cy="16" r="4" fill="#fff"/>
+                            <circle cx="26" cy="16" r="4" fill="#fff"/>
+                            <circle cx="14" cy="16" r="2" fill="#1a1a1a"/>
+                            <circle cx="26" cy="16" r="2" fill="#1a1a1a"/>
+                        </svg>
+                    </div>
+                    
+                    <!-- Kodama (Tree Spirits) -->
+                    <div class="kodama-spirits">
+                        <svg class="kodama kodama-1" viewBox="0 0 30 45" width="20" height="30">
+                            <ellipse cx="15" cy="35" rx="8" ry="10" fill="#f5f5f0"/>
+                            <circle cx="15" cy="15" r="12" fill="#f5f5f0"/>
+                            <circle cx="10" cy="14" r="2" fill="#3a3a3a"/>
+                            <circle cx="20" cy="14" r="2" fill="#3a3a3a"/>
+                            <ellipse cx="15" cy="20" rx="3" ry="4" fill="#3a3a3a"/>
+                        </svg>
+                        <svg class="kodama kodama-2" viewBox="0 0 30 45" width="16" height="24">
+                            <ellipse cx="15" cy="35" rx="8" ry="10" fill="#f0f0ea"/>
+                            <circle cx="15" cy="15" r="12" fill="#f0f0ea"/>
+                            <circle cx="10" cy="14" r="2" fill="#3a3a3a"/>
+                            <circle cx="20" cy="14" r="2" fill="#3a3a3a"/>
+                            <ellipse cx="15" cy="20" rx="3" ry="4" fill="#3a3a3a"/>
+                        </svg>
+                        <svg class="kodama kodama-3" viewBox="0 0 30 45" width="18" height="27">
+                            <ellipse cx="15" cy="35" rx="8" ry="10" fill="#f5f5f0"/>
+                            <circle cx="15" cy="15" r="12" fill="#f5f5f0"/>
+                            <circle cx="10" cy="14" r="2" fill="#3a3a3a"/>
+                            <circle cx="20" cy="14" r="2" fill="#3a3a3a"/>
+                            <ellipse cx="15" cy="20" rx="3" ry="4" fill="#3a3a3a"/>
+                        </svg>
+                    </div>
+                    
+                    <!-- Mini Totoro -->
+                    <svg class="mini-totoro" viewBox="0 0 60 80" width="45" height="60">
+                        <!-- Body -->
+                        <ellipse cx="30" cy="55" rx="22" ry="25" fill="#8b9dc3"/>
+                        <!-- Belly -->
+                        <ellipse cx="30" cy="58" rx="15" ry="18" fill="#e8e4d8"/>
+                        <!-- Belly markings -->
+                        <path d="M22 50 L25 55 L22 60" stroke="#a0a090" stroke-width="1.5" fill="none"/>
+                        <path d="M30 48 L30 65" stroke="#a0a090" stroke-width="1.5"/>
+                        <path d="M38 50 L35 55 L38 60" stroke="#a0a090" stroke-width="1.5" fill="none"/>
+                        <!-- Ears -->
+                        <ellipse cx="18" cy="25" rx="6" ry="15" fill="#8b9dc3"/>
+                        <ellipse cx="42" cy="25" rx="6" ry="15" fill="#8b9dc3"/>
+                        <!-- Head -->
+                        <ellipse cx="30" cy="35" rx="18" ry="14" fill="#8b9dc3"/>
+                        <!-- Eyes -->
+                        <circle cx="22" cy="35" r="5" fill="#fff"/>
+                        <circle cx="38" cy="35" r="5" fill="#fff"/>
+                        <circle cx="23" cy="35" r="3" fill="#1a1a1a"/>
+                        <circle cx="39" cy="35" r="3" fill="#1a1a1a"/>
+                        <!-- Nose -->
+                        <ellipse cx="30" cy="40" rx="4" ry="2.5" fill="#3a3a3a"/>
+                        <!-- Whiskers -->
+                        <line x1="8" y1="38" x2="18" y2="40" stroke="#5a5a5a" stroke-width="1"/>
+                        <line x1="8" y1="42" x2="18" y2="42" stroke="#5a5a5a" stroke-width="1"/>
+                        <line x1="42" y1="40" x2="52" y2="38" stroke="#5a5a5a" stroke-width="1"/>
+                        <line x1="42" y1="42" x2="52" y2="42" stroke="#5a5a5a" stroke-width="1"/>
+                    </svg>
+                    
+                    <!-- Chibi Totoro (small white one) -->
+                    <svg class="chibi-totoro-white" viewBox="0 0 40 55" width="30" height="40">
+                        <ellipse cx="20" cy="38" rx="14" ry="16" fill="#f5f5f0"/>
+                        <ellipse cx="12" cy="18" rx="4" ry="10" fill="#f5f5f0"/>
+                        <ellipse cx="28" cy="18" rx="4" ry="10" fill="#f5f5f0"/>
+                        <ellipse cx="20" cy="28" rx="12" ry="10" fill="#f5f5f0"/>
+                        <circle cx="14" cy="28" r="3" fill="#2a2a2a"/>
+                        <circle cx="26" cy="28" r="3" fill="#2a2a2a"/>
+                        <ellipse cx="20" cy="33" rx="2" ry="1.5" fill="#2a2a2a"/>
+                    </svg>
+                    
+                    <!-- Calcifer (fire spirit) -->
+                    <svg class="calcifer" viewBox="0 0 50 50" width="35" height="35">
+                        <ellipse cx="25" cy="35" rx="18" ry="12" fill="#ff6b35"/>
+                        <ellipse cx="25" cy="30" rx="15" ry="18" fill="#ff8c42"/>
+                        <ellipse cx="25" cy="25" rx="10" ry="15" fill="#ffd166"/>
+                        <path d="M15 20 Q20 5 25 15 Q30 5 35 20" fill="#ff6b35"/>
+                        <path d="M18 18 Q22 8 25 15 Q28 8 32 18" fill="#ffd166"/>
+                        <circle cx="18" cy="30" r="3" fill="#1a1a1a"/>
+                        <circle cx="32" cy="30" r="3" fill="#1a1a1a"/>
+                        <path d="M22 38 Q25 42 28 38" stroke="#1a1a1a" stroke-width="2" fill="none"/>
+                    </svg>
+                    
+                    <!-- Floating Leaves -->
+                    <div class="floating-leaves">
+                        <span class="leaf leaf-1">🍃</span>
+                        <span class="leaf leaf-2">🌿</span>
+                        <span class="leaf leaf-3">🍃</span>
+                    </div>
+                    
+                    <div class="cover-content">
+                        <div class="cover-ornament top">✿ 𖤣𖥧𖡼 ✿</div>
+                        
+                        <!-- Cute Character Illustration - Ghibli Style Girl -->
+                        <div class="character-illustration">
+                            <svg class="aima-avatar-svg" viewBox="0 0 100 120" width="100" height="120">
+                                <!-- Hair -->
+                                <ellipse cx="50" cy="45" rx="35" ry="38" fill="#3d2314"/>
+                                <!-- Face -->
+                                <ellipse cx="50" cy="50" rx="28" ry="30" fill="#fce5d3"/>
+                                <!-- Blush -->
+                                <ellipse cx="32" cy="58" rx="6" ry="3" fill="#ffb6c1" opacity="0.6"/>
+                                <ellipse cx="68" cy="58" rx="6" ry="3" fill="#ffb6c1" opacity="0.6"/>
+                                <!-- Eyes closed (peaceful) -->
+                                <path d="M35 52 Q40 48 45 52" stroke="#3d2314" stroke-width="2" fill="none" stroke-linecap="round"/>
+                                <path d="M55 52 Q60 48 65 52" stroke="#3d2314" stroke-width="2" fill="none" stroke-linecap="round"/>
+                                <!-- Eyelashes -->
+                                <line x1="35" y1="50" x2="33" y2="47" stroke="#3d2314" stroke-width="1"/>
+                                <line x1="45" y1="50" x2="47" y2="47" stroke="#3d2314" stroke-width="1"/>
+                                <line x1="55" y1="50" x2="53" y2="47" stroke="#3d2314" stroke-width="1"/>
+                                <line x1="65" y1="50" x2="67" y2="47" stroke="#3d2314" stroke-width="1"/>
+                                <!-- Smile -->
+                                <path d="M43 65 Q50 72 57 65" stroke="#c9a08a" stroke-width="2" fill="none" stroke-linecap="round"/>
+                                <!-- Hair bangs -->
+                                <path d="M20 40 Q25 25 40 30 Q45 20 55 30 Q60 20 65 30 Q75 25 80 40" fill="#3d2314"/>
+                                <!-- Hair buns -->
+                                <circle cx="22" cy="30" r="12" fill="#3d2314"/>
+                                <circle cx="78" cy="30" r="12" fill="#3d2314"/>
+                                <!-- Bun details -->
+                                <path d="M18 25 Q22 20 26 25" stroke="#2a1810" stroke-width="1" fill="none"/>
+                                <path d="M74 25 Q78 20 82 25" stroke="#2a1810" stroke-width="1" fill="none"/>
+                                <!-- Small flower on hair -->
+                                <circle cx="78" cy="25" r="4" fill="#ffb7c5"/>
+                                <circle cx="78" cy="25" r="2" fill="#ffd700"/>
+                                <!-- Body/shoulders hint -->
+                                <ellipse cx="50" cy="105" rx="25" ry="15" fill="#7ab87a"/>
+                                <!-- Collar -->
+                                <path d="M35 95 L50 105 L65 95" stroke="#5a9a5a" stroke-width="2" fill="none"/>
+                            </svg>
+                        </div>
+                        
+                        <h1 class="journal-title cute-title">Aima's Ramblings</h1>
+                        <div class="title-underline cute-underline"></div>
+                        <p class="journal-subtitle cute-subtitle">⚘ Proceed with Caution ⚘</p>
+                        <p class="journal-tagline">~ where dreams take flight ~</p>
+                        
+                        <div class="cute-doodles">
+                            <span>❀</span>
+                            <span>✿</span>
+                            <span>❀</span>
+                            <span>✿</span>
+                            <span>❀</span>
+                        </div>
+                        
+                        <div class="cover-ornament bottom">𖡼𖤣𖥧 ⋆ 𖥧𖤣𖡼</div>
+                        <div class="open-hint">follow the forest path →</div>
+                    </div>
+                </div>
+                <div class="page-back paper-page">
+                    <div class="page-inner">
+                        <div class="page-num-corner">i</div>
+                        <div class="dedication-page">
+                            <h2 class="dedication-title">✎ Dedication ✎</h2>
+                            <div class="dedication-text" contenteditable="true">To myself — for all the days I kept going,
+even when I didn't feel like it.
+
+To the quiet mornings and late nights,
+to the dreams I'm still chasing,
+to the person I'm becoming.
+
+This journal is a safe space.
+No judgments. No expectations.
+Just me, being authentically me.
+
+♡</div>
+                            <div class="dedication-date" contenteditable="true">Started: February 2026</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 2: Letter -->
+            <div class="page" id="page2">
+                <div class="page-front paper-page lined">
+                    <div class="page-inner">
+                        <div class="page-num-corner">1</div>
+                        <div class="red-margin"></div>
+                        <div class="letter-section">
+                            <div class="letter-date" contenteditable="true">February 18, 2026</div>
+                            <div class="letter-greeting" contenteditable="true">Dear Future Me,</div>
+                            <div class="letter-body" contenteditable="true">I'm writing this letter on a quiet evening, when the world feels both overwhelming and beautiful at the same time.
+
+Today, I want to remember this feeling — the one where I'm learning to be kinder to myself. It's not always easy, but I'm trying.
+
+Some things I'm grateful for right now:
+• The warm cup of tea beside me
+• The way the light falls through my window
+• The people who love me, even when I forget to love myself
+
+Note to self: You are doing better than you think. Every small step counts. Keep going.
+
+With love and hope,
+Me ♡</div>
+                        </div>
+                        <div class="page-corner-deco">✿</div>
+                    </div>
+                </div>
+                <div class="page-back paper-page lined">
+                    <div class="page-inner">
+                        <div class="page-num-corner">2</div>
+                        <div class="red-margin"></div>
+                        <div class="continued-writing" contenteditable="true">Sometimes I wonder if I'm doing enough. Then I remind myself that "enough" is a moving target, and maybe I should stop chasing it.
+
+Things I want to tell myself more often:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+→ You don't have to have it all figured out
+→ Rest is productive too
+→ Your feelings are valid
+→ It's okay to change your mind
+→ You're allowed to take up space
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+A quote I'm holding onto today:
+"You are not behind. You are not ahead. You are exactly where you need to be."
+
+🌙</div>
+                        <div class="sticky-note" contenteditable="true">Remember to breathe! 💭</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 3: Gratitude -->
+            <div class="page" id="page3">
+                <div class="page-front paper-page">
+                    <div class="page-inner">
+                        <div class="page-num-corner">3</div>
+                        <h2 class="section-title" contenteditable="true">✿ Gratitude Garden ✿</h2>
+                        <p class="section-subtitle" contenteditable="true">Little things that made my heart happy...</p>
+                        
+                        <div class="gratitude-grid" id="gratitudeGrid">
+                            <div class="gratitude-card" style="--rotate: -2deg;">
+                                <div class="card-tape"></div>
+                                <div class="card-text" contenteditable="true">The sound of rain on my window while I'm cozy inside</div>
+                                <span class="card-heart">♡</span>
+                            </div>
+                            <div class="gratitude-card" style="--rotate: 1deg;">
+                                <div class="card-tape"></div>
+                                <div class="card-text" contenteditable="true">A friend who always knows what to say</div>
+                                <span class="card-heart">♡</span>
+                            </div>
+                            <div class="gratitude-card" style="--rotate: -1deg;">
+                                <div class="card-tape"></div>
+                                <div class="card-text" contenteditable="true">Fresh morning coffee and quiet moments</div>
+                                <span class="card-heart">♡</span>
+                            </div>
+                            <div class="gratitude-card" style="--rotate: 2deg;">
+                                <div class="card-tape"></div>
+                                <div class="card-text" contenteditable="true">The courage to start again, every single day</div>
+                                <span class="card-heart">♡</span>
+                            </div>
+                        </div>
+                        <button class="add-btn" onclick="addGratitude()">+ Add blessing</button>
+                    </div>
+                </div>
+                <div class="page-back paper-page">
+                    <div class="page-inner">
+                        <div class="page-num-corner">4</div>
+                        <div class="gratitude-list">
+                            <h3 contenteditable="true">Today I am thankful for...</h3>
+                            <div class="list-item" contenteditable="true">☐ ________________________________</div>
+                            <div class="list-item" contenteditable="true">☐ ________________________________</div>
+                            <div class="list-item" contenteditable="true">☐ ________________________________</div>
+                            <div class="list-item" contenteditable="true">☐ ________________________________</div>
+                            <div class="list-item" contenteditable="true">☐ ________________________________</div>
+                        </div>
+                        <div class="quote-box">
+                            <span class="quote-mark left">"</span>
+                            <p contenteditable="true">Gratitude turns what we have into enough.</p>
+                            <span class="quote-mark right">"</span>
+                        </div>
+                        <div class="page-bottom-deco">❀ ❁ ❀</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 4: Dreams -->
+            <div class="page" id="page4">
+                <div class="page-front paper-page">
+                    <div class="page-inner">
+                        <div class="page-num-corner">5</div>
+                        <h2 class="section-title" contenteditable="true">☆ Dreams & Wishes ☆</h2>
+                        
+                        <div class="dream-jar-container">
+                            <div class="dream-jar">
+                                <div class="jar-lid"></div>
+                                <div class="jar-body">
+                                    <div class="jar-label">✨ Wish Jar ✨</div>
+                                    <div class="dream-stars" id="dreamStars">
+                                        <div class="paper-star" style="--hue: 350;" title="Travel to see the Northern Lights" onclick="event.stopPropagation(); showWish(this)"></div>
+                                        <div class="paper-star" style="--hue: 45;" title="Write a book someday" onclick="event.stopPropagation(); showWish(this)"></div>
+                                        <div class="paper-star" style="--hue: 200;" title="Learn to play piano" onclick="event.stopPropagation(); showWish(this)"></div>
+                                        <div class="paper-star" style="--hue: 280;" title="Create something meaningful" onclick="event.stopPropagation(); showWish(this)"></div>
+                                        <div class="paper-star" style="--hue: 120;" title="Be happy" onclick="event.stopPropagation(); showWish(this)"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wish-input-area">
+                                <input type="text" id="wishInput" class="wish-input" placeholder="Write your wish here..." onclick="event.stopPropagation()" onkeypress="if(event.key==='Enter'){event.stopPropagation(); foldWishIntoStar();}">
+                                <button class="fold-btn" onclick="event.stopPropagation(); foldWishIntoStar()">✨ Fold into Star</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="page-back paper-page">
+                    <div class="page-inner">
+                        <div class="page-num-corner">6</div>
+                        <h3 class="goals-title" contenteditable="true" onclick="event.stopPropagation()">This Month's Intentions:</h3>
+                        <div class="goals-checklist" id="goalsChecklist" onclick="event.stopPropagation()">
+                            <div class="goal-item" onclick="event.stopPropagation()">
+                                <input type="checkbox" class="goal-check" onclick="event.stopPropagation()">
+                                <span class="goal-text" contenteditable="true" onclick="event.stopPropagation()">Read more books, scroll less</span>
+                            </div>
+                            <div class="goal-item" onclick="event.stopPropagation()">
+                                <input type="checkbox" class="goal-check" onclick="event.stopPropagation()">
+                                <span class="goal-text" contenteditable="true" onclick="event.stopPropagation()">Call someone I love once a week</span>
+                            </div>
+                            <div class="goal-item" onclick="event.stopPropagation()">
+                                <input type="checkbox" class="goal-check" onclick="event.stopPropagation()">
+                                <span class="goal-text" contenteditable="true" onclick="event.stopPropagation()">Take more walks in nature</span>
+                            </div>
+                            <div class="goal-item" onclick="event.stopPropagation()">
+                                <input type="checkbox" class="goal-check" onclick="event.stopPropagation()">
+                                <span class="goal-text" contenteditable="true" onclick="event.stopPropagation()">Practice being present</span>
+                            </div>
+                        </div>
+                        <button class="add-btn" onclick="event.stopPropagation(); addGoal()">+ Add goal</button>
+                        <div class="inspiration-text">✧ Believe in your journey ✧</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 5: Memories -->
+            <div class="page" id="page5">
+                <div class="page-front paper-page">
+                    <div class="page-inner">
+                        <div class="page-num-corner">7</div>
+                        <h2 class="section-title" contenteditable="true">❀ Memory Lane ❀</h2>
+                        
+                        <div class="memory-photos" id="memoryPhotos">
+                            <div class="memory-photo-slot" onclick="event.stopPropagation(); uploadMemoryImage(this)">
+                                <input type="file" accept="image/*" onchange="handleMemoryImageUpload(event, this.parentElement)" hidden>
+                                <span class="photo-placeholder">📷<br>Add Memory</span>
+                            </div>
+                            <div class="memory-photo-slot" onclick="event.stopPropagation(); uploadMemoryImage(this)">
+                                <input type="file" accept="image/*" onchange="handleMemoryImageUpload(event, this.parentElement)" hidden>
+                                <span class="photo-placeholder">📷<br>Add Memory</span>
+                            </div>
+                            <div class="memory-photo-slot" onclick="event.stopPropagation(); uploadMemoryImage(this)">
+                                <input type="file" accept="image/*" onchange="handleMemoryImageUpload(event, this.parentElement)" hidden>
+                                <span class="photo-placeholder">📷<br>Add Memory</span>
+                            </div>
+                        </div>
+                        <button class="add-btn" onclick="event.stopPropagation(); addMemorySlot()">+ Add Photo</button>
+                    </div>
+                </div>
+                <div class="page-back paper-page">
+                    <div class="page-inner">
+                        <div class="page-num-corner">8</div>
+                        <h3 class="memory-title">📝 A Memory I Never Want to Forget:</h3>
+                        <div class="memory-card">
+                            <div class="washi-tape top"></div>
+                            <div class="memory-text" contenteditable="true">It was an ordinary Tuesday, but somehow everything felt magical. The way the sunlight filtered through the leaves, the sound of laughter filling the room, the feeling that this moment — right here, right now — was exactly where I was meant to be.
+
+I want to remember how my heart felt: full, grateful, alive.</div>
+                            <div class="washi-tape bottom"></div>
+                        </div>
+                        <div class="memory-date" contenteditable="true">— A day worth remembering ♡</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 6: Free Notes & Back Cover -->
+            <div class="page" id="page6">
+                <div class="page-front paper-page lined">
+                    <div class="page-inner">
+                        <div class="page-num-corner">9</div>
+                        <div class="red-margin"></div>
+                        <h2 class="section-title small" contenteditable="true">✎ Free Thoughts ✎</h2>
+                        <div class="free-writing" contenteditable="true">Sometimes the best things in life can't be planned. They just happen when you least expect them.
+
+Reminder: It's okay to rest. It's okay to not have everything figured out. It's okay to be a work in progress.
+
+Things to remember:
+• You are enough, exactly as you are
+• Your pace is valid  
+• Small progress is still progress
+• It's okay to ask for help
+• Tomorrow is a new beginning
+
+Current mood: ________________
+Currently reading: ________________
+Currently dreaming of: ________________
+Currently grateful for: ________________</div>
+                    </div>
+                </div>
+                <div class="page-back cover-back">
+                    <div class="back-cover-content">
+                        <div class="closing-ornament">🌿 ✨ 🌿</div>
+                        <p class="closing-quote" contenteditable="true">"Thank you for the rant"</p>
+                        <div class="closing-doodles">
+                            <span>🍃</span>
+                            <span>💭</span>
+                            <span>🌸</span>
+                            <span>💫</span>
+                        </div>
+                        <div class="closing-message">
+                            <p>Don't forget to come back tomorrow!</p>
+                            <p class="signature">— Your Journal ♡</p>
+                        </div>
+                        <button class="save-btn" onclick="saveJournal()">💾 Save My Journal</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Floating Actions -->
+    <div class="floating-actions">
+        <button class="fab" onclick="saveJournal()" title="Save">💾</button>
+        <button class="fab" onclick="toggleTheme()" title="Theme">🎨</button>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span class="toast-icon">✓</span>
+        <span class="toast-message" id="toastMessage">Saved!</span>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
